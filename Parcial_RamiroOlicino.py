@@ -36,7 +36,7 @@ def SeleccionarJugador(data) -> list:
             nombre = item["nombre"]
 
             if nombre != "" and nombre not in dict:
-                jugador = "{} - {}".format(nombre, indice)
+                #jugador = "{} - {}".format(nombre, indice)
                 dict["nombre"] = nombre
                 dict["indice"] = indice
                 lista.append(dict)
@@ -153,23 +153,29 @@ def GuardarEstadiscticasCSV(data: dict) -> bool:
 
 
 # 4
-def BuscarJugador(nombre: str) -> dict:
+def BuscarJugadorFuncion(nombre: str) -> dict:
     '''
-    Guarda la info en un archivo csv
+    Busca a un jugador por su nombre
+
     Param:
-    *data: diccionario con la informacion a guardar
+    *nombre: recibe el nombre(string)
     Return:
-    retorna -true si lo guardo correctamente
-          -false no guardo correctamente
+    retorna un diccionario con la info del jugador
     '''
     dict = []
     patron = re.compile(nombre, re.IGNORECASE)
     for item in listaJugadores["jugadores"]:
         if re.search(patron, item["nombre"]):
             dict.append(item["nombre"])
-            dict.append(item["logros"][0])
-            dict.append(item["logros"][2])
-            dict.append(item["logros"][6])
+            if "6 veces campeón de la NBA" in item["logros"]:
+                dict.append(item["logros"][0])
+            
+            elif "14 veces All-Star" in item[2]:
+                dict.append(item["logros"][2])
+                
+            elif "Miembro del Salon de la Fama del Baloncesto" in item[6]:
+                dict.append(item["logros"][6])
+                
             break
     return dict
 # 5
@@ -313,7 +319,9 @@ def MostrarJugadoresConMayorPuntosIngresado(data: list):
     '''
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
+
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
 
     for item in data["jugadores"]:
         if float(item["estadisticas"]["promedio_puntos_por_partido"]) > float(puntos):
@@ -341,7 +349,9 @@ def MostrarJugadoresConMayorRebotesIngresado(data: list):
 
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
+
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
 
     for item in data["jugadores"]:
         if float(item["estadisticas"]["promedio_rebotes_por_partido"]) > float(puntos):
@@ -369,7 +379,9 @@ def MostrarJugadoresConMayorAsistenciasIngresado(data: list):
 
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
+
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
 
     for item in data["jugadores"]:
         if float(item["estadisticas"]["promedio_asistencias_por_partido"]) > float(puntos):
@@ -453,7 +465,9 @@ def MostrarJugadoresConMayorPorcentajeDeTirosLibresIngresado(data: list):
 
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
+   
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
 
     for item in data["jugadores"]:
         if float(item["estadisticas"]["porcentaje_tiros_libres"]) > float(puntos):
@@ -534,8 +548,10 @@ def MostrarJugadoresConMayorPorcentajeDeTirosTriplesIngresado(data: list):
 
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
 
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
+    
     for item in data["jugadores"]:
         if float(item["estadisticas"]["porcentaje_tiros_triples"]) > float(puntos):
             jugador = "{0} - {1}".format(item["nombre"], float(
@@ -590,8 +606,10 @@ def MostrarJugadorConMayorPorcentajeTiroDeCampo(data: list):
 
     lista = []
     valor = input("Ingrese Puntos: ")
-    puntos = int(valor)
 
+    if re.match(r'^[0-9]+$',valor):
+        puntos = int(valor)
+    
     for jugador in data["jugadores"]:
         if float(jugador["estadisticas"]["porcentaje_tiros_de_campo"]) > puntos:
             lista.append(jugador)
@@ -638,113 +656,116 @@ while True:
 
     opcion = int(input("Ingese Opcion: "))
 
-    if (opcion == 1):
-        os.system('cls')
-        print(MostrarJugadores(listaJugadores))
-        limpiarConsola()
+    if re.match(r'^[0-9]+$', opcion): 
 
-    elif (opcion == 2):
-        os.system('cls')
-        print(MostrarJugadorEspecifico(listaJugadores))
-        limpiarConsola()
 
-    elif (opcion == 3):
-        pass
+        if (opcion == 1):
+            os.system('cls')
+            print(MostrarJugadores(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 4):
-        os.system('cls')
-        print(SeleccionarJugador(listaJugadores))
-        nombre = input("Nombre: ")
-        print(BuscarJugador(nombre))
-        limpiarConsola()
+        elif (opcion == 2):
+            os.system('cls')
+            print(MostrarJugadorEspecifico(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 5):
-        os.system('cls')
-        print(CalcularMostrarPromedioPuntosXPartidoDeTodoEquipo(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 3):
+            pass
 
-    elif (opcion == 6):
-        os.system('cls')
-        if MostrarJugadorPerteneceAlSalonDeLaFama(listaJugadores):
-            print("Pertenece")
-        else:
-            print("NO Pertenece")
-        limpiarConsola()
+        elif (opcion == 4):
+            os.system('cls')
+            print(SeleccionarJugador(listaJugadores))
+            nombre = input("Nombre: ")
+            print(BuscarJugadorFuncion(nombre))
+            limpiarConsola()
 
-    elif (opcion == 7):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadRebotesTotales(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 5):
+            os.system('cls')
+            print(CalcularMostrarPromedioPuntosXPartidoDeTodoEquipo(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 8):
-        os.system('cls')
-        print(MostrarJugadorConMayorPorcentajeDeTirosDeCampo(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 6):
+            os.system('cls')
+            if MostrarJugadorPerteneceAlSalonDeLaFama(listaJugadores):
+                print("Pertenece")
+            else:
+                print("NO Pertenece")
+            limpiarConsola()
 
-    elif (opcion == 9):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadAsistenciasTotales(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 7):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadRebotesTotales(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 10):
-        os.system('cls')
-        MostrarJugadoresConMayorPuntosIngresado(listaJugadores)
-        limpiarConsola()
+        elif (opcion == 8):
+            os.system('cls')
+            print(MostrarJugadorConMayorPorcentajeDeTirosDeCampo(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 11):
-        os.system('cls')
-        MostrarJugadoresConMayorRebotesIngresado(listaJugadores)
-        limpiarConsola()
+        elif (opcion == 9):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadAsistenciasTotales(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 12):
-        os.system('cls')
-        MostrarJugadoresConMayorAsistenciasIngresado(listaJugadores)
-        limpiarConsola()
+        elif (opcion == 10):
+            os.system('cls')
+            MostrarJugadoresConMayorPuntosIngresado(listaJugadores)
+            limpiarConsola()
 
-    elif (opcion == 13):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadRobosTotales(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 11):
+            os.system('cls')
+            MostrarJugadoresConMayorRebotesIngresado(listaJugadores)
+            limpiarConsola()
 
-    elif (opcion == 14):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadBloqueosTotales(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 12):
+            os.system('cls')
+            MostrarJugadoresConMayorAsistenciasIngresado(listaJugadores)
+            limpiarConsola()
 
-    elif (opcion == 15):
-        os.system('cls')
-        MostrarJugadoresConMayorPorcentajeDeTirosTriplesIngresado(
-            listaJugadores)
-        limpiarConsola()
+        elif (opcion == 13):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadRobosTotales(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 16):
-        os.system('cls')
-        print(MostrarJugadoresConMayorPorcentajeDeTirosXPartidoExcluyendoAlUltimo(
-            listaJugadores))
-        limpiarConsola()
+        elif (opcion == 14):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadBloqueosTotales(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 17):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadLogros(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 15):
+            os.system('cls')
+            MostrarJugadoresConMayorPorcentajeDeTirosTriplesIngresado(
+                listaJugadores)
+            limpiarConsola()
 
-    elif (opcion == 18):
-        os.system('cls')
-        MostrarJugadoresConMayorPorcentajeDeTirosTriplesIngresado
-        limpiarConsola()
+        elif (opcion == 16):
+            os.system('cls')
+            print(MostrarJugadoresConMayorPorcentajeDeTirosXPartidoExcluyendoAlUltimo(
+                listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 19):
-        os.system('cls')
-        print(MostrarJugadorConMayorCantidadTempJugadas(listaJugadores))
-        limpiarConsola()
+        elif (opcion == 17):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadLogros(listaJugadores))
+            limpiarConsola()
 
-    elif (opcion == 20):
-        os.system('cls')
-        MostrarJugadorConMayorPorcentajeTiroDeCampo(listaJugadores)
-        limpiarConsola()
+        elif (opcion == 18):
+            os.system('cls')
+            MostrarJugadoresConMayorPorcentajeDeTirosTriplesIngresado
+            limpiarConsola()
 
-    elif (opcion == "0"):
-        break
+        elif (opcion == 19):
+            os.system('cls')
+            print(MostrarJugadorConMayorCantidadTempJugadas(listaJugadores))
+            limpiarConsola()
+
+        elif (opcion == 20):
+            os.system('cls')
+            MostrarJugadorConMayorPorcentajeTiroDeCampo(listaJugadores)
+            limpiarConsola()
+
+        elif (opcion == "0"):
+            break
 
     else:
         print("Ingrese opcion correcta")
